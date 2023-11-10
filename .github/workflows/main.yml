@@ -15,6 +15,13 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+        
+      - name: Read Review Guidelines
+        id: read-guidelines
+        run: |
+          # Assuming your guidelines are in a file named REVIEW_GUIDELINES.md
+          REVIEW_GUIDELINES=$(cat REVIEW_GUIDELINES.md | base64)
+          echo "::set-output name=review_guidelines::$REVIEW_GUIDELINES"
 
       - name: AI Code Review Action
         uses: freeedcom/ai-codereviewer@v2.6.0
@@ -23,4 +30,5 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_API_MODEL: "gpt-4" # Optional: defaults to "gpt-4"
           exclude: "**/*.json, **/*.md" # Optional: exclude patterns separated by commas
+          review-guidelines: ${{ steps.read-guidelines.outputs.review_guidelines }}
           post-if-error: 'true'
