@@ -76,13 +76,13 @@ class BookRepository implements RepositoryInterface
                 $destination = '/books/'.$book->id.'/';
     
                 // get a clean filename
-                $filename = str_random(16).'.'.$file->getClientOriginalExtension();
+                $filename = str_random(16).'.'.$file->getOriginalExtension();
     
                 // absolute path
                 $absolutePath = $destination.$filename;
     
                 // move the file to the destination  file
-                $storage = \Storage::put($absolute_path, file_get_content($file->getRealPath()));
+                $storage = Storage::put($absolute_path, file_get_content($file->getRealPath()));
     
                 // return filename if file is moved
                 if ($storage) {
