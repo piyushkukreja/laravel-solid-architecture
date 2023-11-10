@@ -32,7 +32,7 @@ class ReviewController extends Controller
      */
     public function index()
     {
-        $reviews = $this->reviews->getAll();
+        $reviews = $this->reviews->getAllReviews();
 
         return view('reviews.index', compact('reviews'));
     }
@@ -56,9 +56,9 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
-        $this->reviews->create($request->all());
+        if($request) {$this->reviews->create($request->all());
 
-        return redirect('/reviews');
+        return redirect('/reviews')};
     }
 
     /**
