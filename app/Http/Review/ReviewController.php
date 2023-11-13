@@ -38,7 +38,7 @@ class ReviewController extends Controller
     }
 
     /**
-     * Display a form to create a new review.
+     * Display a form / opn view to create a new review.
      *
      * @return \Illuminate\Http\Response
      */
@@ -48,7 +48,7 @@ class ReviewController extends Controller
     }
 
     /**
-     * Create a new review.
+     * Create a new reviw.
      *
      * @param Request $request
      *
