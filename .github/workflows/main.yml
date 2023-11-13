@@ -48,21 +48,39 @@
 #         env:
 #           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
 #           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-on: [pull_request]
+# on: [pull_request]
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+#       pull-requests: write
+#     steps:
+#       # This step checks out a copy of your repository.
+#       - uses: actions/checkout@v3
+#       - uses: sshnaidm/gpt-code-review-action@v2.0
+            
+#         with:
+#           openai-key: ${{ secrets.OPENAI_API_KEY }}
+#           # Post comment with text even if step failed
+#           post-if-error: 'true'
+name: Code Review with ChatGPT
+
+on:
+  pull_request:
+    types: [opened]
 
 jobs:
-  build:
+  add-auto-review-comment:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
+    name: Code Review with ChatGPT
     steps:
-      # This step checks out a copy of your repository.
-      - uses: actions/checkout@v3
-      # - uses: sshnaidm/gpt-code-review-action@v2.0
-      - uses: Jonghakseo/gpt-pr-github-actions@v1.0
-            
+      - uses: Jonghakseo/gpt-pr-github-actions@v1.0 # This is example. use Jonghakseo/gpt-pr-github-actions@v1
         with:
-          openai-key: ${{ secrets.OPENAI_API_KEY }}
-          # Post comment with text even if step failed
-          post-if-error: 'true'
+          openai_api_key: ${{ secrets.openai_api_key }} # Get the OpenAI API key from repository secrets
+          github_token: ${{ secrets.GITHUB_TOKEN }} # Get the Github Token from repository secrets
+          github_pr_id: ${{ github.event.number }} # Get the Github Pull Request ID from the Github event
+          openai_model: "gpt-3.5-turbo" # Optional: specify the OpenAI engine to use. [gpt-3.5-turbo, text-davinci-002, text-babbage-001, text-curie-001, text-ada-001'] Default is 'gpt-3.5-turbo'
+          openai_temperature: 0.7 # Optional: Default is 0.7
+          openai_top_p: 0.8 # Optional: Default 0.8
