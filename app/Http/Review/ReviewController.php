@@ -70,9 +70,11 @@ class ReviewController extends Controller
      */
     public function edit($id)
     {
-        $review = $this->reviews->find($id);
+        if($id) {$review = $this->reviews->find($id);
 
-        return view('reviews.edit', compact('review'));
+        return view('reviews.edit', compact('review'))} else {
+            return redirect('/reviews')
+        };
     }
 
     /**
