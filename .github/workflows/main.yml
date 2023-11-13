@@ -1,50 +1,50 @@
-# name: AI Code Reviewer
+name: AI Code Reviewer
 
-# on: [pull_request]
-#     # types:
-#     #   - opened
-#     #   - synchronize
+on: [pull_request]
+    # types:
+    #   - opened
+    #   - synchronize
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     permissions:
-#       contents: read
-#       pull-requests: write
-#     steps:
-#       - name: Checkout Repo
-#         uses: actions/checkout@v3
-
-#       - name: Read Review Guidelines
-#         id: read-guidelines
-#         run: |
-#           REVIEW_GUIDELINES=$(cat REVIEW_GUIDE.md)
-#           echo "::set-output name=review_guidelines::$REVIEW_GUIDELINES"
-
-#       - name: AI Code Review Action
-#         uses: freeedcom/ai-codereviewer@v2.6.0
-#         with:
-#           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-#           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-#           OPENAI_API_MODEL: "gpt-4" # Optional: defaults to "gpt-4"
-#           exclude: "**/*.json,**/*.md" # Optional: exclude patterns separated by commas
-#           review-guidelines: ${{ steps.read-guidelines.outputs.review_guidelines }}
-#           post-if-error: 'true'
-on:
-  pull_request:
-  issue_comment:
 jobs:
-  pr_agent_job:
+  build:
     runs-on: ubuntu-latest
     permissions:
-      issues: write
+      contents: read
       pull-requests: write
-      contents: write
-    name: Run pr agent on every pull request, respond to user comments
     steps:
-      - name: PR Agent action step
-        id: pragent
-        uses: Codium-ai/pr-agent@main
-        env:
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Read Review Guidelines
+        id: read-guidelines
+        run: |
+          REVIEW_GUIDELINES=$(cat REVIEW_GUIDE.md)
+          echo "::set-output name=review_guidelines::$REVIEW_GUIDELINES"
+
+      - name: AI Code Review Action
+        uses: freeedcom/ai-codereviewer@v2.6.0
+        with:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_MODEL: "gpt-4" # Optional: defaults to "gpt-4"
+          exclude: "**/*.json,**/*.md" # Optional: exclude patterns separated by commas
+          review-guidelines: ${{ steps.read-guidelines.outputs.review_guidelines }}
+          post-if-error: 'true'
+# on:
+#   pull_request:
+#   issue_comment:
+# jobs:
+#   pr_agent_job:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       issues: write
+#       pull-requests: write
+#       contents: write
+#     name: Run pr agent on every pull request, respond to user comments
+#     steps:
+#       - name: PR Agent action step
+#         id: pragent
+#         uses: Codium-ai/pr-agent@main
+#         env:
+#           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+#           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
