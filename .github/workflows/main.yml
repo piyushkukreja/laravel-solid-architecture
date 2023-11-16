@@ -1,35 +1,35 @@
-# name: AI Code Reviewer
+name: AI Code Reviewer
 
-# on: [pull_request]
-#     # types:
-#     #   - opened
-#     #   - synchronize
+on: [pull_request]
+    # types:
+    #   - opened
+    #   - synchronize
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     permissions:
-#       contents: read
-#       pull-requests: write
-#     steps:
-#       - name: Checkout Repo
-#         uses: actions/checkout@v3
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
 
-#       - name: Read Review Guidelines
-#         id: read-guidelines
-#         run: |
-#           REVIEW_GUIDELINES=$(cat REVIEW_GUIDE.md)
-#           echo "::set-output name=review_guidelines::$REVIEW_GUIDELINES"
+      - name: Read Review Guidelines
+        id: read-guidelines
+        run: |
+          REVIEW_GUIDELINES=$(cat REVIEW_GUIDE.md)
+          echo "::set-output name=review_guidelines::$REVIEW_GUIDELINES"
 
-#       - name: AI Code Review Action
-#         uses: freeedcom/ai-codereviewer@v2.6.0
-#         with:
-#           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-#           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-#           OPENAI_API_MODEL: "gpt-4" # Optional: defaults to "gpt-4"
-#           exclude: "**/*.json,**/*.md" # Optional: exclude patterns separated by commas
-#           review-guidelines: ${{ steps.read-guidelines.outputs.review_guidelines }}
-#           post-if-error: 'true'
+      - name: AI Code Review Action
+        uses: freeedcom/ai-codereviewer@v2.6.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_MODEL: "gpt-4" # Optional: defaults to "gpt-4"
+          exclude: "**/*.json,**/*.md" # Optional: exclude patterns separated by commas
+          review-guidelines: ${{ steps.read-guidelines.outputs.review_guidelines }}
+          post-if-error: 'true'
 # on:
 #   pull_request:
 #   issue_comment:
@@ -121,22 +121,3 @@
 #           PATH_TO_EXCLUDE: action/**/*, package-lock.json, package.json
 #           MAX_PATCH_PER_FILE: 2000
 #           MAX_FILE_PER_PR: 20
-
-name: Code Review GPT
-
-on: [pull_request]
-
-jobs:
-  run_code_review:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Code Review GPT
-        uses: mattzcarey/code-review-gpt@v0.1.4-alpha
-        with:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          MODEL: 'gpt-3.5-turbo'
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
