@@ -72,8 +72,7 @@ class ReviewController extends Controller
     {
         if($id) {$review = $this->reviews->find($id);
 
-        return view('reviews.edit', compact('review'))} else {
-            return redirect('/reviews')
+        return view('reviews.edit', compact('review'))} else {return redirect('/reviews')
         };
     }
 
