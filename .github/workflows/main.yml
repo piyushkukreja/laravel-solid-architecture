@@ -79,7 +79,7 @@
 #       - uses: Jonghakseo/gpt-pr-github-actions@v1.0 # This is example. use Jonghakseo/gpt-pr-github-actions@v1
 #         with:
 #           openai_api_key: ${{ secrets.openai_api_key }} # Get the OpenAI API key from repository secrets
-#           github_token: ${{ secrets.GITHUB_TOKEN }} # Get the Github Token from repository secrets
+#           github_token: ${{ secrets.GH_TOKEN }} # Get the Github Token from repository secrets
 #           github_pr_id: ${{ github.event.number }} # Get the Github Pull Request ID from the Github event
 #           openai_model: "gpt-3.5-turbo" # Optional: specify the OpenAI engine to use. [gpt-3.5-turbo, text-davinci-002, text-babbage-001, text-curie-001, text-ada-001'] Default is 'gpt-3.5-turbo'
 #           openai_temperature: 0.7 # Optional: Default is 0.7
@@ -103,21 +103,42 @@
 #           labelPullRequestsWhenApproved: "true"
 #           labelPullRequestsWhenReviewNeeded: "false"
 #           failJobsWhenReviewNeeded: "false"
-name: Code Review
-permissions:
-  contents: read
-  pull-requests: write
+# name: Code Review
+# permissions:
+#   contents: read
+#   pull-requests: write
+# on:
+#   pull_request:
+#     types: [opened, synchronize]
+# jobs:
+#   code-review:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: Louis-7/ai-code-review@v0.1
+#         env:
+#           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+#           PATH_TO_EXCLUDE: action/**/*, package-lock.json, package.json
+#           MAX_PATCH_PER_FILE: 2000
+#           MAX_FILE_PER_PR: 20
+
+name: Code Review GPT
+
 on:
   pull_request:
-    types: [opened, synchronize]
+    branches: [main]
+
 jobs:
-  code-review:
+  run_code_review:
     runs-on: ubuntu-latest
     steps:
-      - uses: Louis-7/ai-code-review@v0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Code Review GPT
+        uses: mattzcarey/code-review-gpt@v0.1.4-alpha
+        with:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          PATH_TO_EXCLUDE: action/**/*, package-lock.json, package.json
-          MAX_PATCH_PER_FILE: 2000
-          MAX_FILE_PER_PR: 20
+          MODEL: 'gpt-4'
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
