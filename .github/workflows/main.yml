@@ -28,8 +28,6 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_API_MODEL: "gpt-4" # Optional: defaults to "gpt-4"
           exclude: "**/*.json,**/*.md" # Optional: exclude patterns separated by commas
-          review-guidelines: ${{ steps.read-guidelines.outputs.review_guidelines }}
-          post-if-error: 'true'
 # on:
 #   pull_request:
 #   issue_comment:
