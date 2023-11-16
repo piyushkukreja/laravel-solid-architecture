@@ -124,9 +124,7 @@
 
 name: Code Review GPT
 
-on:
-  pull_request:
-    branches: [main]
+on: [pull_request]
 
 jobs:
   run_code_review:
