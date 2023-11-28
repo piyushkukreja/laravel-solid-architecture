@@ -32,13 +32,13 @@ class ReviewController extends Controller
      */
     public function index()
     {
-        $reviews = $this->reviews->getAll();
+        $reviews = $this->reviews->getAllReviews();
 
         return view('reviews.index', compact('reviews'));
     }
 
     /**
-     * Display a form to create a new review.
+     * Display a form / opn view to create a new review.
      *
      * @return \Illuminate\Http\Response
      */
@@ -48,7 +48,7 @@ class ReviewController extends Controller
     }
 
     /**
-     * Create a new review.
+     * Create a new reviw.
      *
      * @param Request $request
      *
@@ -56,9 +56,9 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
-        $this->reviews->create($request->all());
+        if($request) {$this->reviews->create($request->all());
 
-        return redirect('/reviews');
+        return redirect('/reviews')};
     }
 
     /**
@@ -70,9 +70,10 @@ class ReviewController extends Controller
      */
     public function edit($id)
     {
-        $review = $this->reviews->find($id);
+        if($id) {$review = $this->reviews->find($id);
 
-        return view('reviews.edit', compact('review'));
+        return view('reviews.edit', compact('review'))} else {return redirect('/reviews')
+        };
     }
 
     /**

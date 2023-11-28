@@ -1,11 +1,10 @@
 name: AI Code Reviewer
 
 on: [pull_request]
-
     # types:
     #   - opened
     #   - synchronize
-# permissions: write-all
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,11 +15,108 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
+      - name: Read Review Guidelines
+        id: read-guidelines
+        run: |
+          REVIEW_GUIDELINES=$(cat REVIEW_GUIDE.md)
+          echo "::set-output name=review_guidelines::$REVIEW_GUIDELINES"
+
       - name: AI Code Review Action
-        uses: freeedcom/ai-codereviewer@v2.6.0
+        # uses: freeedcom/ai-codereviewer@v2.6.0
+        uses: piyushkukreja/ai-codereviewer@main
         with:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_API_MODEL: "gpt-4" # Optional: defaults to "gpt-4"
-          exclude: "**/*.json, **/*.md" # Optional: exclude patterns separated by commas
-          post-if-error: 'true'
+          exclude: "**/*.json,**/*.md" # Optional: exclude patterns separated by commas
+# on:
+#   pull_request:
+#   issue_comment:
+# jobs:
+#   pr_agent_job:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       issues: write
+#       pull-requests: write
+#       contents: write
+#     name: Run pr agent on every pull request, respond to user comments
+#     steps:
+#       - name: PR Agent action step
+#         id: pragent
+#         uses: Codium-ai/pr-agent@main
+#         env:
+#           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+#           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+# on: [pull_request]
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+#       pull-requests: write
+#     steps:
+#       # This step checks out a copy of your repository.
+#       - uses: actions/checkout@v3
+#       - uses: sshnaidm/gpt-code-review-action@v2.0
+            
+#         with:
+#           openai-key: ${{ secrets.OPENAI_API_KEY }}
+#           # Post comment with text even if step failed
+#           post-if-error: 'true'
+# name: Code Review with ChatGPT
+
+# on:
+#   pull_request:
+#     types: [opened]
+
+# jobs:
+#   add-auto-review-comment:
+#     runs-on: ubuntu-latest
+#     name: Code Review with ChatGPT
+#     steps:
+#       - uses: Jonghakseo/gpt-pr-github-actions@v1.0 # This is example. use Jonghakseo/gpt-pr-github-actions@v1
+#         with:
+#           openai_api_key: ${{ secrets.openai_api_key }} # Get the OpenAI API key from repository secrets
+#           github_token: ${{ secrets.GH_TOKEN }} # Get the Github Token from repository secrets
+#           github_pr_id: ${{ github.event.number }} # Get the Github Pull Request ID from the Github event
+#           openai_model: "gpt-3.5-turbo" # Optional: specify the OpenAI engine to use. [gpt-3.5-turbo, text-davinci-002, text-babbage-001, text-curie-001, text-ada-001'] Default is 'gpt-3.5-turbo'
+#           openai_temperature: 0.7 # Optional: Default is 0.7
+#           openai_top_p: 0.8 # Optional: Default 0.8
+# name: Codeball
+# on:
+#   pull_request: {}
+#   pull_request_review_comment:
+#     types: [created, edited]
+
+# jobs:
+#   codeball_job:
+#     runs-on: ubuntu-latest
+#     name: Codeball
+#     steps:
+#       - name: Codeball
+#         uses: sturdy-dev/codeball-action@v2
+#         with:
+#           # For all configuration options see https://github.com/sturdy-dev/codeball-action/blob/v2/action.yml
+#           approvePullRequests: "true"
+#           labelPullRequestsWhenApproved: "true"
+#           labelPullRequestsWhenReviewNeeded: "false"
+#           failJobsWhenReviewNeeded: "false"
+# name: Code Review
+# permissions:
+#   contents: read
+#   pull-requests: write
+# on:
+#   pull_request:
+#     types: [opened, synchronize]
+# jobs:
+#   code-review:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: Louis-7/ai-code-review@v0.1
+#         env:
+#           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+#           PATH_TO_EXCLUDE: action/**/*, package-lock.json, package.json
+#           MAX_PATCH_PER_FILE: 2000
+#           MAX_FILE_PER_PR: 20
