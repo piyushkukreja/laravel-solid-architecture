@@ -22,7 +22,8 @@ jobs:
           echo "::set-output name=review_guidelines::$REVIEW_GUIDELINES"
 
       - name: AI Code Review Action
-        uses: freeedcom/ai-codereviewer@v2.6.0
+        # uses: freeedcom/ai-codereviewer@v2.6.0
+        uses: piyushkukreja/ai-codereviewer@main
         with:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
